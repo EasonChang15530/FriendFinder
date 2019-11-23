@@ -1,7 +1,7 @@
 module.exports = [
   {
     name: "Leonardo",
-    photo: "http://img02.tooopen.com/Product/images/2010/7/12/20100712112017904042.jpg",
+    photo: "https://media1.popsugar-assets.com/files/thumbor/Glb-mJzXT2Dvgh-tXtA1PTPLitI/fit-in/500x500/filters:format_auto-!!-:strip_icc-!!-/2018/07/16/716/n/1922398/e372b6625b4cc3d45d6485.32517235_/i/Leonardo-DiCaprio.jpg",
     scores: [
     "5",
     "5",
@@ -81,7 +81,7 @@ module.exports = [
   },
   {
     name: "Yao",
-    photo: "http://easyread.ph.126.net/YO6u-vFESxwetp-3D_1UMw==/7916673935500735161.jpg",
+    photo: "https://cdnph.upi.com/svc/sv/upi/2901531147614/2018/1/58848a5762191f322da391269134a593/Yao-Ming-graduates-after-seven-year-college-stay.jpg",
     scores: [
     "1",
     "1",
