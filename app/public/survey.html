@@ -120,55 +120,57 @@
       <option value="5">5(Strongly Agree)</option>
     </select>
 
-    <h3><strong>Question 10</strong><h3>
-    <h4>You feel more energetic after spending time with a group of people.</h4>
-    <select id="question1" aria-labelledby="dropdownMenuButton">
-      <option selected disabled>Select an Option</option>
-      <option value="1">1(Strongly Disagree)</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5(Strongly Agree)</option>
-    </select>
+    <h3><strong>Question 10</strong>
+      <h3>
+        <h4>You feel more energetic after spending time with a group of people.</h4>
+        <select id="question1" aria-labelledby="dropdownMenuButton">
+          <option selected disabled>Select an Option</option>
+          <option value="1">1(Strongly Disagree)</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5(Strongly Agree)</option>
+        </select>
 
-    <br>
-    <br>
-    <!-- Button trigger modal -->
-    <button type="button" style="width: 100%; background-color: #337AB7; color: #FFFFFF; padding: 10px 16px;"
-      class="btn" data-toggle="modal" data-target="#exampleModal">
-      Submit
-    </button>
+        <br>
+        <br>
+        <!-- Button trigger modal -->
+        <button type="button" id="submit"
+          style="width: 100%; background-color: #337AB7; color: #FFFFFF; padding: 10px 16px;" class="btn"
+          data-toggle="modal" data-target="#exampleModal">
+          Submit
+        </button>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Best Match</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <!-- <script>friendInfo();</script> -->
-            <div id="friendName"></div>
-            <div id="friendPhoto"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn" style="background-color: #337AB7; color: #FFFFFF;">Got it!</button>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Best Match</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-- <script>friendInfo();</script> -->
+                <div id="friendName"></div>
+                <div id="friendPhoto"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn" style="background-color: #337AB7; color: #FFFFFF;">Got it!</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <hr>
-    <footer class="footer">
-      <div class="container">
-        <a style="color: #337AB7;" href="/api/friends">API Friends List</a> |
-        <a style="color: #337AB7;" href="">GitHub Repo</a>
-      </div>
-    </footer>
+        <hr>
+        <footer class="footer">
+          <div class="container">
+            <a style="color: #337AB7;" href="/api/friends">API Friends List</a> |
+            <a style="color: #337AB7;" href="">GitHub Repo</a>
+          </div>
+        </footer>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -176,8 +178,21 @@
 
   <script type="text/javascript">
     $(document).ready(function () {
-      function friendInfo() {
 
+      // Create an array variable to store the user input scores.
+      var userInputScores = [];
+      // $("#submit").on("click", function() {
+      $("#submit").click(function () {
+        // store the user input one by one.
+        $("select").each(function () {
+          userInputScores.push(this.value);
+        })
+        console.log(userInputScores);
+        friendInfo();
+      })
+
+
+      function friendInfo() {
         // Using ajax get api
         $.ajax({ url: "/api/friends", method: "GET" })
           .then(function (friendsData) {
@@ -186,24 +201,35 @@
             console.log(friendsData);
             console.log("------------------------------------");
 
-            // Loop through and display each of the customers
+            // Create a variable and assign it to infinity. The smaller the value, the more matching.
+            var bestMatchScore = 100;
+            var bestMatchFriend;
+            // Loop through and create a variable to store each friend scores.
             for (var i = 0; i < friendsData.length; i++) {
+              var eachFriendScores = friendsData[i].scores;
+              var difTotalScore = 0;
 
-              var friendName = $("<h2>").text(friendsData[i].name);
-              $("#friendName").append(friendName);
+              for (var j = 0; j < userInputScores.length; j++) {
+                difTotalScore += Math.abs(userInputScores[j] - eachFriendScores[j]);
+              }
+              console.log(difTotalScore);
 
-              var friendPhoto = $("<image src='" + friendsData[i].photo + "'>");
-              $("#friendPhoto").append(friendPhoto);
-
+              if (difTotalScore < bestMatchScore) {
+                bestMatchScore = difTotalScore;
+                bestMatchFriend = friendsData[i];
+                //console.log("Best match = ",friend);
+              }
             }
+
+            // Insert the name and photo to the corresponding location
+            $("#friendName").html("<h2>" + bestMatchFriend.name + "</h2>");
+            $("#friendPhoto").html("<image style='width:100%' src='" + bestMatchFriend.photo + "'>");
+
           });
       };
-      friendInfo();
-      // $(".modal-body").html(friendInfo);
     });
 
   </script>
-
 
 </body>
 
