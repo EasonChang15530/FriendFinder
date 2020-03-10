@@ -199,6 +199,9 @@
           ]
         };
 
+        // Add user inputs to friends list
+        $.post('/api/friends', userInput, function () { });
+
         // Using ajax get api
         $.ajax({ url: "/api/friends", method: "GET" })
           .then(function (friendsData) {
@@ -230,8 +233,8 @@
             // Insert the name and photo to the corresponding location
             $("#friendName").html("<h2>" + bestMatchFriend.name + "</h2>");
             $("#friendPhoto").html("<image style='width:100%' src='" + bestMatchFriend.photo + "'>");
+          })
 
-          });
       });
 
     });
